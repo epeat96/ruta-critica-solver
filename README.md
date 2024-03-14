@@ -62,3 +62,6 @@ Se obtiene un archivo CSV con las siguientes columnas calculadas:
 
 * LF: "Latest Finish" o finalizacion mas tardia, es la fecha mas tardia con la que la tarea puede finaizar.
 
+* Holgura: Es el resultado de la diferencia "LF - EF" y representa la cantidad de tiempo que una tarea puede retrasarse sin aumentar la duracion del proyecto.
+
+* Rutas Criticas: En esta columna se pondran cadenas que representan la/las ruta/s critica/s del problema.
