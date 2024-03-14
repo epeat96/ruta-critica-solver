@@ -54,11 +54,11 @@ Script para resolver problemas de ruta critica de Organizacion 3
 # Resultados de la ejecucion del script
 Se obtiene un archivo CSV con las siguientes columnas calculadas:
     
-    * ES: "Earliest Start" o inicio mas temprano, es la fecha mas temprana en la que la tarea correspondiente puede empezar
+* ES: "Earliest Start" o inicio mas temprano, es la fecha mas temprana en la que la tarea correspondiente puede empezar
 
-    * EF: "Earliest Finish" o finalizacion mas temprana, es la fecha mas temprana en la que la tarea correspondiente puede finalizar
+* EF: "Earliest Finish" o finalizacion mas temprana, es la fecha mas temprana en la que la tarea correspondiente puede finalizar
 
-    * LS: "Latest Start" o inicio mas tardio, es la fecha mas tardia con la que la tarea puede empezar.
+* LS: "Latest Start" o inicio mas tardio, es la fecha mas tardia con la que la tarea puede empezar.
 
-    * LF: "Latest Finish" o finalizacion mas tardia, es la fecha mas tardia con la que la tarea puede finaizar.
+* LF: "Latest Finish" o finalizacion mas tardia, es la fecha mas tardia con la que la tarea puede finaizar.
 
