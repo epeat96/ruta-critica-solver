@@ -38,7 +38,10 @@ Script para resolver problemas de ruta critica de Organizacion 3
 # Pasos para correr el script ( es igual para Linux o para Windows )
 
 1. Entrar en el entorno virtualenv ( ver paso 2 de guia de instalacion )
-2. ./rutaCritica.py
+2.
+    ```bash
+    ./rutaCritica.py
+    ```
 
 # Como usar el script
 
