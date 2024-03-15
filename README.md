@@ -46,14 +46,14 @@ Script para resolver problemas de ruta critica de Organizacion 3
       ```powershell
       .venv\Scripts\activate
       ```
-5.
+5. Ejecutar el script
     ```bash
     ./rutaCritica.py
     ```
 
 # Como usar el script
 
-1. Para usar correctamente el script y obtener la tabla con los valores calculados y las rutas criticas es necesario que el CSV tenga completas las siguientes columnas:
+1. Para usar correctamente el script y obtener la tabla con los valores calculados y las rutas criticas es necesario que el CSV tenga datos en las siguientes columnas:
 
     * Tareas: Los nombres de las tareas.
 
