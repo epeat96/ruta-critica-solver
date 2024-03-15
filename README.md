@@ -6,7 +6,7 @@ Script para resolver problemas de ruta critica de Organizacion 3
 - python3
 - virtualenv
 
-# Pasos para instalar dependencias del proyecto
+# Pasos para ejecutar el script
 
 1. Clonar proyecto
 
@@ -27,13 +27,13 @@ Script para resolver problemas de ruta critica de Organizacion 3
     dir ruta-critica-solver
     ```
 
-2. Crear entorno virtualenv
+3. Crear entorno virtualenv
     
     ```bash
     python -m venv .venv
     ```
 
-2. Entrar en el entorno virtualenv
+4. Entrar en el entorno virtualenv
 
     - En Linux o gitbash ubicarnos en el directorio raiz del proyecto y correr el siguiente comando:
 
@@ -46,11 +46,7 @@ Script para resolver problemas de ruta critica de Organizacion 3
       ```powershell
       .venv\Scripts\activate
       ```
-
-# Pasos para correr el script
-
-1. Entrar en el entorno virtualenv ( ver paso 2 de guia de instalacion )
-2.
+5.
     ```bash
     ./rutaCritica.py
     ```
