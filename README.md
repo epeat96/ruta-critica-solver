@@ -1,7 +1,7 @@
 # ruta-critica-solver
 Script para resolver problemas de ruta critica de Organizacion 3
 
-# Requerimientos para instalar
+# Requerimientos para usar
 
 - python3
 - virtualenv
