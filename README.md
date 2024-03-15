@@ -4,7 +4,6 @@ Script para resolver problemas de ruta critica de Organizacion 3
 # Requerimientos para instalar
 
 - python3
-- pip
 - virtualenv
 
 # Pasos para instalar dependencias del proyecto
@@ -47,12 +46,6 @@ Script para resolver problemas de ruta critica de Organizacion 3
       ```powershell
       .venv\Scripts\activate
       ```
-
-4. Instalar las dependencias con pip
-
-    ```bash
-    pip install -r requirements.txt
-    ```
 
 # Pasos para correr el script
 
