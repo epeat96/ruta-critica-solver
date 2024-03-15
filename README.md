@@ -9,7 +9,26 @@ Script para resolver problemas de ruta critica de Organizacion 3
 
 # Pasos para instalar dependencias del proyecto
 
-1. Crear entorno virtualenv
+1. Clonar proyecto ( En Linux o gitbash )
+
+    ```bash
+    git clone https://github.com/epeat96/ruta-critica-solver.git
+    ```
+2. Ingresar al directorio del repositorio
+
+    - En Linux o gitbash
+
+    ```bash
+    cd ruta-critica-solver
+    ```
+
+    - En Windows
+
+    ```powershell
+    dir ruta-critica-solver
+    ```
+
+2. Crear entorno virtualenv (Igual en Linux, gitbash o windows)
     
     ```bash
     python -m venv .venv
@@ -17,7 +36,7 @@ Script para resolver problemas de ruta critica de Organizacion 3
 
 2. Entrar en el entorno virtualenv
 
-    - En linux ( o gitbash ) ubicarnos en el directorio raiz del proyecto y correr el siguiente comando:
+    - En Linux o gitbash ubicarnos en el directorio raiz del proyecto y correr el siguiente comando:
 
       ```bash
       source .venv/bin/activate 
@@ -29,13 +48,13 @@ Script para resolver problemas de ruta critica de Organizacion 3
       .venv\Scripts\activate
       ```
 
-3. Instalar las dependencias con pip ( igual para Linux o Windows )
+4. Instalar las dependencias con pip ( igual para Linux, gitbash o Windows )
 
     ```bash
     pip install -r requirements.txt
     ```
 
-# Pasos para correr el script ( es igual para Linux o para Windows )
+# Pasos para correr el script ( es igual para Linux, gitbash o para Windows )
 
 1. Entrar en el entorno virtualenv ( ver paso 2 de guia de instalacion )
 2.
