@@ -23,7 +23,21 @@ class Tarea:
         self.dependientes = []
 
     def __str__(self):
-        return f"nombre : {self.nombre} \n \t duracion : {self.duracion} \n \t es : {self.es} \n \t ef : {self.ef} \n \t ls : {self.ls} \n \t lf : {self.lf}"
+        dependencias_nombres = ', '.join(
+            dep.nombre for dep in self.dependencias)
+        dependientes_nombres = ', '.join(
+            dep.nombre for dep in self.dependientes)
+
+        return (
+            f"Tarea: {self.nombre}\n"
+            f"  Duración: {self.duracion}\n"
+            f"  ES (Early Start): {self.es}\n"
+            f"  EF (Early Finish): {self.ef}\n"
+            f"  LS (Late Start): {self.ls}\n"
+            f"  LF (Late Finish): {self.lf}\n"
+            f"  Dependencias: {dependencias_nombres or 'Ninguna'}\n"
+            f"  Dependientes: {dependientes_nombres or 'Ninguno'}"
+        )
 
     def agregarDependencias(self, dependencias):
         self.dependencias.extend(dependencias)
@@ -50,6 +64,18 @@ def calcular_ls_lf(tareas, duracion_proyecto):
         else:
             tarea.lf = min([dep.ls for dep in tarea.dependientes])
             tarea.ls = tarea.lf - tarea.duracion
+
+
+def obtenerRutasCriticas(nodo, ruta, rutas_criticas):
+    if len(nodo.dependientes) == 0:
+        ruta.append(nodo)
+        rutas_criticas.append(ruta)
+        return nodo
+    if nodo.lf - nodo.ef == 0:
+        ruta.append(nodo)
+    for dependiente in nodo.dependientes:
+        if dependiente.lf - dependiente.ef == 0:
+            obtenerRutasCriticas(dependiente, ruta, rutas_criticas)
 
 
 tareas = []
@@ -104,3 +130,9 @@ with open(nombre_archivo, mode='w', newline='', encoding='utf-8') as archivo:
     escritor = csv.DictWriter(archivo, fieldnames=encabezados)
     escritor.writeheader()
     escritor.writerows(filas)
+
+obtenerRutasCriticas(tareas[0], [], rutas_criticas)
+for ruta in rutas_criticas:
+    for tarea in ruta:
+        print(f"{tarea.nombre}", end="->")
+    print("")
