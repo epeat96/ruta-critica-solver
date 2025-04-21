@@ -59,7 +59,7 @@ Script para resolver problemas de ruta critica de Organizacion 3
 
     * Duraciones: Las duraciones de las tareas ( todas en una misma unidad de medida, dias, semanas, etc.)
 
-    * Dependencias: Una lista separada por comas de los nombres separados por comas de las dependencias de cada tarea.
+    * Dependencias: Una lista separada por comas de los nombres separados por comas de las dependencias de cada tarea o "-" (guion) en caso de no tener dependencias.
 2. Se ejecuta el script y se obtiene la tabla en formato CSV con todos los valores calculados
 
 # Resultados de la ejecucion del script
