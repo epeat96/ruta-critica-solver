@@ -117,22 +117,54 @@ encabezados = ["Tareas", "Duraciones", "Dependencias",
 filas = []
 
 with open(nombre_archivo, mode='r', encoding='utf-8') as archivo:
+    # Leer el contenido completo para manejar posibles errores de formato
+    contenido = archivo.read().strip()
+    if not contenido:
+        raise ValueError(f"El archivo {nombre_archivo} está vacío")
+    
+    # Volver al inicio del archivo para leerlo como CSV
+    archivo.seek(0)
     lector = csv.DictReader(archivo)
 
     for indice, fila in enumerate(lector):
-        tareas.append(Tarea(fila["Tareas"], int(
-            fila["Duraciones"]), 0, 0, 0, 0))
-        dependencias.append(fila["Dependencias"])
+        # Asegurarse de que los campos requeridos existan y estén correctamente formateados
+        if "Tareas" not in fila or not fila["Tareas"].strip():
+            raise ValueError(f"Fila {indice+1}: Falta el nombre de la tarea o está vacío")
+        
+        try:
+            duracion = int(fila["Duraciones"])
+            if duracion <= 0:
+                raise ValueError(f"Fila {indice+1}: La duración debe ser un número positivo")
+        except (ValueError, KeyError):
+            raise ValueError(f"Fila {indice+1}: La duración no es un número válido")
+        
+        if "Dependencias" not in fila:
+            raise ValueError(f"Fila {indice+1}: Falta la columna de dependencias")
+        
+        # Crear la tarea y guardar sus dependencias
+        tareas.append(Tarea(fila["Tareas"].strip(), duracion, 0, 0, 0, 0))
+        dependencias.append(fila["Dependencias"].strip())
 
 # Establecer las dependencias entre tareas
 for indice, tarea in enumerate(tareas):
     if dependencias[indice] == "-":
         continue
 
-    nombres_dependencias = [dep.strip() for dep in dependencias[indice].split(',')]
+    # Asegurar que todas las dependencias estén correctamente recortadas (sin espacios)
+    nombres_dependencias = [dep.strip() for dep in dependencias[indice].split(',') if dep.strip()]
+    
+    # Imprimir para debugging si hay problemas con las dependencias
+    if not nombres_dependencias:
+        print(f"Advertencia: La tarea {tarea.nombre} tiene formato de dependencias incorrecto: '{dependencias[indice]}'")
     
     dependencias_a_agregar = [
         dependencia for dependencia in tareas if dependencia.nombre in nombres_dependencias]
+    
+    # Verificar si no se encontraron todas las dependencias
+    if len(dependencias_a_agregar) != len(nombres_dependencias):
+        encontradas = [dep.nombre for dep in dependencias_a_agregar]
+        faltantes = [nombre for nombre in nombres_dependencias if nombre not in encontradas]
+        print(f"Advertencia: No se encontraron las siguientes dependencias para {tarea.nombre}: {faltantes}")
 
     tarea.agregarDependencias(dependencias_a_agregar)
 
