@@ -178,7 +178,18 @@ calcular_es_ef(tareas)
 duracion_proyecto = max(tarea.ef for tarea in tareas)
 calcular_ls_lf(tareas, duracion_proyecto)
 
-# Generar filas para el CSV
+# Obtener las rutas críticas
+rutas_criticas = obtener_rutas_criticas(tareas)
+
+# Convertir las rutas críticas a cadenas de texto
+rutas_criticas_texto = []
+for ruta in rutas_criticas:
+    rutas_criticas_texto.append(" -> ".join([tarea.nombre for tarea in ruta]))
+
+# Preparar datos para el CSV
+datos_csv = []
+
+# Primero agregamos las filas de tareas
 for indice, tarea in enumerate(tareas):
     fila = {}
     fila["Tareas"] = tarea.nombre
@@ -189,22 +200,27 @@ for indice, tarea in enumerate(tareas):
     fila["LS"] = tarea.ls
     fila["LF"] = tarea.lf
     fila["Holgura"] = tarea.ls - tarea.es  # La holgura correcta es LS-ES (o LF-EF)
-    fila["Rutas Criticas"] = "Sí" if es_tarea_critica(tarea) else "No"
-    filas.append(fila)
+    fila["Rutas Criticas"] = ""  # Inicialmente vacío
+    datos_csv.append(fila)
+
+# Luego agregamos las rutas críticas en las primeras filas
+for i, ruta_texto in enumerate(rutas_criticas_texto):
+    if i < len(datos_csv):  # Si hay suficientes filas, usamos las existentes
+        datos_csv[i]["Rutas Criticas"] = ruta_texto
+    else:  # Si hay más rutas que tareas, creamos filas vacías adicionales
+        fila_vacia = {campo: "" for campo in encabezados}
+        fila_vacia["Rutas Criticas"] = ruta_texto
+        datos_csv.append(fila_vacia)
 
 # Escribir al archivo CSV
 with open(nombre_archivo, mode='w', newline='', encoding='utf-8') as archivo:
     escritor = csv.DictWriter(archivo, fieldnames=encabezados)
     escritor.writeheader()
-    escritor.writerows(filas)
+    escritor.writerows(datos_csv)
 
-# Obtener y mostrar rutas críticas
-rutas_criticas = obtener_rutas_criticas(tareas)
-print("Rutas críticas encontradas:")
+# Mostrar las rutas críticas en la consola
+print(f"Se encontraron {len(rutas_criticas)} rutas críticas:")
 for i, ruta in enumerate(rutas_criticas, 1):
     print(f"Ruta {i}: ", end="")
-    for j, tarea in enumerate(ruta):
-        if j < len(ruta) - 1:
-            print(f"{tarea.nombre}", end=" -> ")
-        else:
-            print(f"{tarea.nombre}")
+    ruta_texto = " -> ".join([tarea.nombre for tarea in ruta])
+    print(ruta_texto)
