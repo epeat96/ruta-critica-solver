@@ -66,21 +66,52 @@ def calcular_ls_lf(tareas, duracion_proyecto):
             tarea.ls = tarea.lf - tarea.duracion
 
 
-def obtenerRutasCriticas(nodo, ruta, rutas_criticas):
-    if len(nodo.dependientes) == 0:
-        ruta.append(nodo)
-        rutas_criticas.append(ruta)
-        return nodo
-    if nodo.lf - nodo.ef == 0:
-        ruta.append(nodo)
-    for dependiente in nodo.dependientes:
-        if dependiente.lf - dependiente.ef == 0:
-            obtenerRutasCriticas(dependiente, ruta, rutas_criticas)
+def es_tarea_critica(tarea):
+    # Una tarea es crítica si su holgura es cero
+    return tarea.ls - tarea.es == 0
 
 
+def obtener_tareas_iniciales(tareas):
+    # Devuelve las tareas que no tienen dependencias
+    return [tarea for tarea in tareas if not tarea.dependencias]
+
+
+def obtener_rutas_criticas(tareas):
+    # Encontrar todas las tareas iniciales
+    tareas_iniciales = obtener_tareas_iniciales(tareas)
+    rutas_criticas = []
+    
+    # Para cada tarea inicial, buscar rutas críticas
+    for tarea_inicial in tareas_iniciales:
+        if es_tarea_critica(tarea_inicial):
+            explorar_ruta_critica(tarea_inicial, [tarea_inicial], rutas_criticas)
+    
+    return rutas_criticas
+
+
+def explorar_ruta_critica(tarea_actual, ruta_actual, rutas_criticas):
+    # Si la tarea no tiene dependientes, es el final de una ruta
+    if not tarea_actual.dependientes:
+        rutas_criticas.append(ruta_actual.copy())
+        return
+    
+    # Explorar cada dependiente que sea crítico
+    tiene_dependientes_criticos = False
+    for dependiente in tarea_actual.dependientes:
+        if es_tarea_critica(dependiente):
+            tiene_dependientes_criticos = True
+            nueva_ruta = ruta_actual.copy()
+            nueva_ruta.append(dependiente)
+            explorar_ruta_critica(dependiente, nueva_ruta, rutas_criticas)
+    
+    # Si no hay dependientes críticos, entonces esta ruta termina aquí
+    if not tiene_dependientes_criticos and ruta_actual:
+        rutas_criticas.append(ruta_actual.copy())
+
+
+# Leer el archivo CSV y crear las tareas
 tareas = []
 dependencias = []
-rutas_criticas = []
 encabezados = ["Tareas", "Duraciones", "Dependencias",
                "ES", "EF", "LS", "LF", "Holgura", "Rutas Criticas"]
 filas = []
@@ -93,27 +124,29 @@ with open(nombre_archivo, mode='r', encoding='utf-8') as archivo:
             fila["Duraciones"]), 0, 0, 0, 0))
         dependencias.append(fila["Dependencias"])
 
+# Establecer las dependencias entre tareas
 for indice, tarea in enumerate(tareas):
-
     if dependencias[indice] == "-":
         continue
 
-    nombres_dependencias = set(dependencias[indice].split(','))
-
+    nombres_dependencias = [dep.strip() for dep in dependencias[indice].split(',')]
+    
     dependencias_a_agregar = [
         dependencia for dependencia in tareas if dependencia.nombre in nombres_dependencias]
 
     tarea.agregarDependencias(dependencias_a_agregar)
 
+# Establecer relaciones de dependientes
 for tarea in tareas:
     for dependencia in tarea.dependencias:
         dependencia.agregarDependiente(tarea)
 
-
+# Calcular ES, EF, LS, LF
 calcular_es_ef(tareas)
 duracion_proyecto = max(tarea.ef for tarea in tareas)
 calcular_ls_lf(tareas, duracion_proyecto)
 
+# Generar filas para el CSV
 for indice, tarea in enumerate(tareas):
     fila = {}
     fila["Tareas"] = tarea.nombre
@@ -123,16 +156,23 @@ for indice, tarea in enumerate(tareas):
     fila["EF"] = tarea.ef
     fila["LS"] = tarea.ls
     fila["LF"] = tarea.lf
-    fila["Holgura"] = tarea.lf - tarea.ef
+    fila["Holgura"] = tarea.ls - tarea.es  # La holgura correcta es LS-ES (o LF-EF)
+    fila["Rutas Criticas"] = "Sí" if es_tarea_critica(tarea) else "No"
     filas.append(fila)
 
+# Escribir al archivo CSV
 with open(nombre_archivo, mode='w', newline='', encoding='utf-8') as archivo:
     escritor = csv.DictWriter(archivo, fieldnames=encabezados)
     escritor.writeheader()
     escritor.writerows(filas)
 
-obtenerRutasCriticas(tareas[0], [], rutas_criticas)
-for ruta in rutas_criticas:
-    for tarea in ruta:
-        print(f"{tarea.nombre}", end="->")
-    print("")
+# Obtener y mostrar rutas críticas
+rutas_criticas = obtener_rutas_criticas(tareas)
+print("Rutas críticas encontradas:")
+for i, ruta in enumerate(rutas_criticas, 1):
+    print(f"Ruta {i}: ", end="")
+    for j, tarea in enumerate(ruta):
+        if j < len(ruta) - 1:
+            print(f"{tarea.nombre}", end=" -> ")
+        else:
+            print(f"{tarea.nombre}")
